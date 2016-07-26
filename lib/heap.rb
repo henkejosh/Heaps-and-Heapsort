@@ -5,15 +5,31 @@ class BinaryMinHeap
   end
 
   def count
+    @store.length
   end
 
   def extract
+    raise "heap is empty" if count == 0
+    val = @store[0]
+
+    if count > 1
+      @store[0] = @store.pop
+      BinaryMinHeap.heapify_down(@store, 0, &@prc)
+    else
+      @store.pop
+    end
+
+    val
   end
 
   def peek
+    raise "heap is empty" if count == 0
+    @store[0]
   end
 
   def push(val)
+    @store << val
+    BinaryMinHeap.heapify_up(@store, count - 1, &@prc)
   end
 
   protected
