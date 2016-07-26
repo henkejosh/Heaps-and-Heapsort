@@ -65,7 +65,7 @@ class BinaryMinHeap
     else
       child_values = [array[children[0]], array[children[1]]]
       swap_idx = prc.call(child_values[0], child_values[1]) == -1 ?
-      children[0] : children[1]
+        children[0] : children[1]
     end
 
     array[parent_idx], array[swap_idx] = array[swap_idx], array[parent_idx]
