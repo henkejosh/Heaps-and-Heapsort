@@ -38,29 +38,24 @@ class BinaryMinHeap
   def self.heapify_down(array, parent_idx, len = array.length, &prc)
     prc ||= Proc.new { |el1, el2| el1 <=> el2 }
 
-    left_child_idx, right_child_idx = self.child_indices(len, parent_idx)
+    children = self.child_indices(len, parent_idx)
 
-    parent = array[parent_idx]
-
-    until children.all? { |idx| @store[idx] > @store[parent_idx] }
-      children.each do |child_idx|
-
-        if @store[child_idx] < @store[parent_idx]
-          @store[child_idx], @store[parent_idx] = @store[parent_idx],
-            @store[child_idx]
-
-            parent_idx = self.parent_index(child_idx)
-            children = self.child_indices(@store.length, parent_idx)
-            break
-        end
-
-        p @store[children.first]
-        p @store[children.last]
-        p @store[parent_idx]
-      end
-
+    if children.all? { |idx| prc.call(array[parent_idx], array[idx]) <= 0 }
+      # if children.include?(len - 1)
+        return array
+      # end
     end
-    @store
+
+    if children.length == 1
+      swap_idx = children.first
+    else
+      child_values = [array[children[0]], array[children[1]]]
+      swap_idx = prc.call(child_values[0], child_values[1]) == -1 ?
+      children[0] : children[1]
+    end
+
+    array[parent_idx], array[swap_idx] = array[swap_idx], array[parent_idx]
+    self.heapify_down(array, swap_idx, len)
   end
 
   def self.heapify_up(array, child_idx, len = array.length, &prc)
